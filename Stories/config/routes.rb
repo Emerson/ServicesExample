@@ -1,3 +1,7 @@
 Rails.application.routes.draw do
-  resources :stories
+  namespace :api do
+    namespace :v1 do
+      resources :stories, defaults: {format: :json}
+    end
+  end
 end

@@ -1,11 +1,14 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+default:
+  title: default
+  url: http://google.com
+  submitted_at: 2014-10-15 17:00:00
 
-one:
-  title: MyString
-  url: MyString
-  submitted_at: 2014-10-15 17:42:30
+cnn:
+  title: CNN
+  url: http://cnn.com
+  submitted_at: 2014-10-14 17:00:00
 
-two:
-  title: MyString
-  url: MyString
-  submitted_at: 2014-10-15 17:42:30
+bbc:
+  title: BBC
+  url: http://bbcnews.com
+  submitted_at: 2014-10-13 17:00:00
