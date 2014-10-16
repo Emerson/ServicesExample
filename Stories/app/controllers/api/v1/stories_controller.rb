@@ -20,13 +20,18 @@ class Api::V1::StoriesController < ApplicationController
                    errors:  story.errors }, status: 422
   end
 
-  def edit
-  end
-
   def update
+    @story.update_attributes(story_params)
+    @story.save!
+    render json: @story
+  rescue ActiveRecord::RecordInvalid
+    render json: { message: 'Invalid story',
+                   errors:   @story.errors}, status: 422
   end
 
   def destroy
+    @story.destroy
+    render json: @story
   end
 
 private

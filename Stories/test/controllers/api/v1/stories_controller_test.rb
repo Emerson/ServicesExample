@@ -35,4 +35,33 @@ class Api::V1::StoriesControllerTest < ActionController::TestCase
     assert json_response[:story][:id].present?
   end
 
+  def test_update
+    story = stories(:default)
+    put :update, id: story.id, story: {
+      title: 'Updated Title',
+      url:   'http://ted.com'
+    }
+    assert_response :success
+    assert_equal 'Updated Title', json_response[:story][:title]
+    assert_equal 'http://ted.com', json_response[:story][:url]
+  end
+
+  def test_destroy
+    story = stories(:default)
+    assert_difference "Story.count", -1 do
+      delete :destroy, id: story.id
+    end
+    assert_response :success
+    assert json_response[:story][:id].present?
+    assert json_response[:story][:title].present?
+    assert json_response[:story][:url].present?
+  end
+
+  #-- Invalid Requests ----------------------------------------------------
+
+  def test_story_not_found
+    get :show, id: 999
+    assert_response :not_found
+  end
+
 end
