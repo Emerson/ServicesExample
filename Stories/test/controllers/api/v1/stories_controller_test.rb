@@ -64,4 +64,25 @@ class Api::V1::StoriesControllerTest < ActionController::TestCase
     assert_response :not_found
   end
 
+  def test_create_invalid
+    assert_no_difference "Story.count" do
+      post :create, story: {}
+    end
+    assert_response :unprocessable_entity
+    assert json_response[:message].present?
+    assert json_response[:errors][:title].present?
+    assert json_response[:errors][:url].present?
+  end
+
+  def test_update_invalid
+    story = stories(:default)
+    put :update, id: story.id, story: {
+      url:   '',
+      title: ''
+    }
+    assert json_response[:message].present?
+    assert json_response[:errors][:title].present?
+    assert json_response[:errors][:url].present?
+  end
+
 end
