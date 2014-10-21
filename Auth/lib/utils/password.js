@@ -7,7 +7,10 @@ module.exports = {
       if(err)
         return callback(err)
       bcrypt.hash(password, salt, function(err, hash) {
-        return callback(err, hash)
+        if(err) {
+          return callback(err)
+        }
+        return callback(null, hash)
       })
     })
   },

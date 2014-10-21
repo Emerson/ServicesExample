@@ -15,10 +15,9 @@ var fs = require('fs')
 
 //-- Globalized helpers ---------------------------------------------------
 global.rebuildDb = function(done) {
-  fs.unlink(dbConfig.test.filename)
-  exec('db-migrate up --config ./config/database.json -e test', function(err, stdout, stderr) {
-    global.db = new sqlite3.Database(dbConfig.test.filename, sqlite3.OPEN_READWRITE)
-    done()
+  global.db.run('DELETE FROM users;', function(err) {
+    if(err) { return done(err) }
+    global.db.run('DELETE FROM SQLITE_SEQUENCE WHERE NAME = \'users\'', done)
   })
 }
 
