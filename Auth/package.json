@@ -16,9 +16,9 @@
     "db-migrate": "^0.7.1",
     "express": "^4.9.7",
     "lodash": "^2.4.1",
-    "node-validation": "^0.1.0",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
-    "sqlite3": "^3.0.2"
+    "sqlite3": "^3.0.2",
+    "validator": "^3.22.0"
   }
 }
