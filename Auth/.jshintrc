@@ -1,0 +1,7 @@
+{
+  "undef": true,
+  "unused": false,
+  "asi": true,
+  "node": true,
+  "predef": [ "_", "db", "assert", "beforeEach", "it", "describe", "rebuildDb" ]
+}

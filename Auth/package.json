@@ -1,0 +1,23 @@
+{
+  "name": "Auth",
+  "version": "0.0.0",
+  "description": "A simple service that handles basic user management and authentication",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Emerson Lackey <emerson.lackey@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^0.8.0",
+    "db-migrate": "^0.7.1",
+    "express": "^4.9.7",
+    "lodash": "^2.4.1",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "sqlite3": "^3.0.2"
+  }
+}

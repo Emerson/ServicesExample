@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "driver": "sqlite3",
+    "filename": "tmp/upsurge-dev.db"
+  },
+  "test": {
+    "driver": "sqlite3",
+    "filename": "tmp/upsurge-test.db"
+  }
+}
