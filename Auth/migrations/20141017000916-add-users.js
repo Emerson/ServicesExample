@@ -7,8 +7,10 @@ exports.up = function(db, callback) {
     email: 'string',
     first_name: 'string',
     last_name: 'string',
-    encrypted_password: 'string'
-  })
+    encrypted_password: 'string',
+    auth_token: 'string',
+    auth_token_expires_at: {type: 'integer'}
+  }, callback)
 }
 
 exports.down = function(db, callback) {

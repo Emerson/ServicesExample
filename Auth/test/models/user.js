@@ -34,6 +34,7 @@ describe('User', function() {
     Model.create(attributes, function(err, user) {
       assert(!err)
       assert(user, 'User was not passed')
+      assert(!user.auth_token)
       delete attributes.password
       delete attributes.password_confirmation
       _.each(attributes, function(val, key) {
@@ -51,6 +52,31 @@ describe('User', function() {
       assert(err.last_name)
       assert(err.password)
       assert(err.password_confirmation)
+      done()
+    })
+  })
+
+  it('finds by email and password', function(done) {
+    Model.findByAuthentication({email: 'jake@test.com', password: 'ted123'}, function(err, user) {
+      assert(user)
+      assert(user.email === 'jake@test.com')
+      done()
+    })
+  })
+
+  it('returns an error when the password does not match', function(done) {
+    Model.findByAuthentication({email: 'jake@test.com', password: 'ted321'}, function(err, user) {
+      assert(err)
+      done()
+    })
+  })
+
+  it('generates an auth token', function(done) {
+    Model.find(1, function(err, user) {
+      Model.generateAuthToken(user, function(err, user) {
+        assert(!err)
+        assert(user)
+      })
       done()
     })
   })

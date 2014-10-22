@@ -55,13 +55,36 @@ function create(attributes, callback) {
   })
 }
 
-function findByAuthentication(username, password) {
-  return null
+function findByAuthentication(credentials, callback) {
+  var findSql = "SELECT * FROM users WHERE email = $email"
+  db.get(findSql, {$email: credentials.email}, function(err, user) {
+    if(err) { return callback(err) }
+    // Check if the password matches
+    Password.compare(credentials.password, user.encrypted_password, function(err, isPasswordMatch) {
+      if(err) { return callback(err) }
+      if(isPasswordMatch) {
+        callback(null, user)
+      }else{
+        callback('Password did not match')
+      }
+    })
+  })
+}
+
+function generateAuthToken(user, callback) {
+
+  var sql = "UPDATE users SET auth_token = $auth_token WHERE id = $id";
+  db.
+  findById(user.id, function(err, user) {
+    if(err) { return callback(err) }
+    callback(null, user)
+  })
 }
 
 module.exports = {
   all: all,
   find: find,
   create: create,
-  findByAuthentication: findByAuthentication
+  findByAuthentication: findByAuthentication,
+  generateAuthToken: generateAuthToken
 }
