@@ -100,9 +100,20 @@ describe('User', function() {
   it('considers a token expired after one-week', function() {
     // one week is 604800 seconds
     var lastWeek = (new Date().getTime() - 604800)
-    var overOneWeek = (new Date().getTime() + 1)
-    assert(!Model.authTokenExpired(lastWeek))
-    assert(Model.authTokenExpired(overOneWeek))
+    var overOneWeek = (new Date().getTime() + 100)
+    assert(Model.authTokenExpired(lastWeek))
+    assert(!Model.authTokenExpired(overOneWeek))
+  })
+
+  it('does not authenticate expired auth tokens', function(done) {
+    Model.find(1, function(err, user) {
+      db.run("UPDATE users set auth_token = 'ted321', auth_token_expires_at = 100 WHERE id=1", function(err, result) {
+        Model.authenticateWithToken('ted321', function(err, user) {
+          assert(err)
+          done()
+        })
+      })
+    })
   })
 
 })

@@ -75,7 +75,7 @@ function generateAuthToken(user, callback) {
 
 function authTokenExpired(authTokenExpiresAt, now) {
   currentTime = now || new Date().getTime()
-  return (authTokenExpiresAt > currentTime)
+  return (authTokenExpiresAt < currentTime)
 }
 
 function findByAuthentication(credentials, callback) {
@@ -98,9 +98,11 @@ function authenticateWithToken(authToken, callback) {
   var sql = "SELECT * FROM users WHERE auth_token = $auth_token"
   db.get(sql, {$auth_token: authToken}, function(err, user) {
     if(err) { return callback(err) }
-    // Ensure the auth_token is not expires
-    console.log('test expiration here---------------')
-    callback(null, user)
+    if(authTokenExpired(user.auth_token_expires_at)) {
+      return callback('Auth token expired')
+    }else{
+      return callback(null, user)
+    }
   })
 }
 
