@@ -1,8 +1,11 @@
 var prependKeys = require('../utils/prepend_keys')
 var userIsValid = require('./validations/user')
 var Password = require('../utils/password')
+var uuid = require('node-uuid')
 var db = require('../db')
 
+
+//-- Internal Methods -----------------------------------------------------
 var findById = function(id, callback) {
   var sql = "SELECT * FROM users WHERE id = $id"
   db.get(sql, {$id: id}, function(err, result) {
@@ -27,6 +30,8 @@ function addPassword(user, callback) {
   })
 }
 
+
+//-- Exported Methods -----------------------------------------------------
 function all(callback) {
   var sql = "SELECT * FROM users"
   db.all(sql, function(err, results) {
@@ -55,6 +60,24 @@ function create(attributes, callback) {
   })
 }
 
+function generateAuthToken(user, callback) {
+  var sql = "UPDATE users SET auth_token = $authToken, auth_token_expires_at = $authTokenExpiresAt WHERE id = $id"
+  var authToken = uuid.v1()
+  var authTokenExpiresAt = new Date().getTime() + 604800 // 1 week from now
+  db.run(sql, {$authToken: authToken, $authTokenExpiresAt: authTokenExpiresAt, $id: user.id}, function(err, result) {
+    if(err) { return callback(err) }
+    findById(this.lastID, function(err, user) {
+      if(err) { return callback(err) }
+      callback(null, user)
+    })
+  })
+}
+
+function authTokenExpired(authTokenExpiresAt, now) {
+  currentTime = now || new Date().getTime()
+  return (authTokenExpiresAt > currentTime)
+}
+
 function findByAuthentication(credentials, callback) {
   var findSql = "SELECT * FROM users WHERE email = $email"
   db.get(findSql, {$email: credentials.email}, function(err, user) {
@@ -71,12 +94,12 @@ function findByAuthentication(credentials, callback) {
   })
 }
 
-function generateAuthToken(user, callback) {
-
-  var sql = "UPDATE users SET auth_token = $auth_token WHERE id = $id";
-  db.
-  findById(user.id, function(err, user) {
+function authenticateWithToken(authToken, callback) {
+  var sql = "SELECT * FROM users WHERE auth_token = $auth_token"
+  db.get(sql, {$auth_token: authToken}, function(err, user) {
     if(err) { return callback(err) }
+    // Ensure the auth_token is not expires
+    console.log('test expiration here---------------')
     callback(null, user)
   })
 }
@@ -85,6 +108,8 @@ module.exports = {
   all: all,
   find: find,
   create: create,
+  authTokenExpired: authTokenExpired,
+  generateAuthToken: generateAuthToken,
   findByAuthentication: findByAuthentication,
-  generateAuthToken: generateAuthToken
+  authenticateWithToken: authenticateWithToken
 }

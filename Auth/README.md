@@ -13,3 +13,8 @@ A basic node http service that manages user creation and authentication.
 * `npm install db-migrate -g`
 * `npm install sqlite3 -g`
 * `db-migrate up` _(creates the users table in an sqlite database)_
+
+## Running the Tests
+
+* `db-migrate up --config ./config/database.json -e test`
+* `mocha`

@@ -22,8 +22,8 @@ describe('User', function() {
     seedUsers(null, function() {
       Model.all(function(err, results) {
         assert(results.length === 2)
-        assert(results[0]['email'] === 'jake@test.com')
-        assert(results[1]['email'] === 'test@test.com')
+        assert(results[0].email === 'jake@test.com')
+        assert(results[1].email === 'test@test.com')
         done()
       })
     })
@@ -76,9 +76,33 @@ describe('User', function() {
       Model.generateAuthToken(user, function(err, user) {
         assert(!err)
         assert(user)
+        assert(user.auth_token.length > 0)
+        // Ensure there is a one week expiry
+        assert(user.auth_token_expires_at > (new Date().getTime() + 604000))
+        assert(user.auth_token_expires_at < (new Date().getTime() + 604801))
+        done()
       })
-      done()
     })
+  })
+
+  it('authenticates with a token', function(done) {
+    Model.generateAuthToken({id: 1}, function(err, user) {
+      assert(!err)
+      Model.authenticateWithToken(user.auth_token, function(err, authUser) {
+        assert(!err)
+        assert(authUser)
+        assert(authUser.auth_token)
+        done()
+      })
+    })
+  })
+
+  it('considers a token expired after one-week', function() {
+    // one week is 604800 seconds
+    var lastWeek = (new Date().getTime() - 604800)
+    var overOneWeek = (new Date().getTime() + 1)
+    assert(!Model.authTokenExpired(lastWeek))
+    assert(Model.authTokenExpired(overOneWeek))
   })
 
 })
