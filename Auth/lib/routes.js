@@ -2,6 +2,7 @@ var User = require('./models/user')
 
 module.exports = function(app) {
 
+  //-- RESTful actions ----------------------------------------------------
   app.get('/api/v1/users', function(req, res) {
     User.all(function(err, results) {
       if(err) {}
@@ -34,6 +35,21 @@ module.exports = function(app) {
     User.destroy(req.params.id, function(err) {
       if(err) {}
       res.json({user: null})
+    })
+  })
+
+  //-- Authentication -----------------------------------------------------
+  app.post('/api/v1/users/authenticate', function(req, res) {
+    User.findByAuthentication(req.body, function(err, user) {
+      if(err) {}
+      res.json({user: user})
+    })
+  })
+
+  app.get('/api/v1/users/authenticate/:token', function(req, res) {
+    User.authenticateWithToken(req.params.token, function(err, user) {
+      if(err) {}
+      res.json({authenticated: true})
     })
   })
 
