@@ -3,5 +3,5 @@
   "unused": false,
   "asi": true,
   "node": true,
-  "predef": [ "_", "db", "assert", "beforeEach", "it", "describe", "rebuildDb", "seedUsers" ]
+  "predef": [ "_", "db", "assert", "beforeEach", "it", "describe", "rebuildDb", "seedUsers", "setupApp" ]
 }

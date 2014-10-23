@@ -3,13 +3,17 @@ var User = require('./models/user')
 module.exports = function(app) {
 
   app.get('/api/v1/users', function(req, res) {
-    var users = User.all()
-    res.json({users: users})
+    User.all(function(err, results) {
+      if(err) {}
+      res.json({users: results})
+    })
   })
 
   app.get('/api/v1/users/:id', function(req, res) {
-    var user = User.find(1)
-    res.json({user: user})
+    var user = User.find(req.params.id, function(err, user) {
+      if(err) {}
+      res.json({user: user})
+    })
   })
 
   app.post('/api/v1/users', function(req, res) {

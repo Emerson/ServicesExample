@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var express = require('express')
-var _ = require('lodash')
 var app = express()
 
 require('./lib/routes')(app)

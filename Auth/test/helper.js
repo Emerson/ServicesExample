@@ -11,6 +11,8 @@ var Password = require('../lib/utils/password')
 var dbConfig = require('../config/database')
 var sqlite3 = require('sqlite3').verbose()
 var exec = require('child_process').exec
+var routes = require('../lib/routes')
+var express = require('express')
 var fs = require('fs')
 
 //-- Globalized helpers ---------------------------------------------------
@@ -19,6 +21,12 @@ global.rebuildDb = function(done) {
     if(err) { return done(err) }
     global.db.run('DELETE FROM SQLITE_SEQUENCE WHERE NAME = \'users\'', done)
   })
+}
+
+global.setupApp = function() {
+  var app = express()
+  routes(app)
+  return app
 }
 
 global.seedUsers = function(attributes, done) {
