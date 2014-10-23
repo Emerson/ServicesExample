@@ -17,15 +17,24 @@ module.exports = function(app) {
   })
 
   app.post('/api/v1/users', function(req, res) {
-
+    User.create(req.body, function(err, user) {
+      if(err) { return res.json(err) }
+      res.json({user: user})
+    })
   })
 
-  app.put('/api/v1/users/:id', function(req, res) {
-
+  app.patch('/api/v1/users/:id', function(req, res) {
+    User.update(req.params.id, req.body, function(err, user) {
+      if(err) {}
+      res.json({user: user})
+    })
   })
 
   app.delete('/api/v1/users/:id', function(req, res) {
-
+    User.destroy(req.params.id, function(err) {
+      if(err) {}
+      res.json({user: null})
+    })
   })
 
 }

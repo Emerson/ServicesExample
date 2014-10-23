@@ -44,6 +44,26 @@ describe('User', function() {
     })
   })
 
+  it('updates a user', function(done) {
+    var updatedAttributes = {email: 'update@test.com', first_name: 'Update'}
+    Model.update(1, updatedAttributes, function(err, user) {
+      assert(!err)
+      assert(user.email === 'update@test.com')
+      assert(user.first_name === 'Update')
+      done()
+    })
+  })
+
+  it('destroys users', function(done) {
+    Model.destroy(1, function(err) {
+      Model.find(1, function(err, user) {
+        assert(!err)
+        assert(!user)
+        done()
+      })
+    })
+  })
+
   it('returns user validation errors', function(done) {
     Model.create({}, function(err) {
       assert(err)

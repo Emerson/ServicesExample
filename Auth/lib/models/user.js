@@ -60,6 +60,31 @@ function create(attributes, callback) {
   })
 }
 
+function update(id, updatedAttributes, callback) {
+  var sql = "UPDATE users SET "
+  var updatePairs = []
+  Object.keys(updatedAttributes).forEach(function(key, val) {
+    updatePairs.push(key + " = $" + key)
+  })
+  var sql = "UPDATE users SET " + updatePairs.join(', ') + " WHERE id = $id"
+  updatedAttributes.id = id
+  db.run(sql, prependKeys(updatedAttributes), function(err) {
+    if(err) { return callback(err) }
+    findById(this.lastID, function(err, user) {
+      if(err) { return callback(err) }
+      callback(null, user)
+    })
+  })
+}
+
+function destroy(id, callback) {
+  var sql = "DELETE FROM users WHERE id = $id"
+  db.run(sql, {$id: id}, function(err, result) {
+    if(err) { return callback(err) }
+    callback(null, result)
+  })
+}
+
 function generateAuthToken(user, callback) {
   var sql = "UPDATE users SET auth_token = $authToken, auth_token_expires_at = $authTokenExpiresAt WHERE id = $id"
   var authToken = uuid.v1()
@@ -110,6 +135,8 @@ module.exports = {
   all: all,
   find: find,
   create: create,
+  update: update,
+  destroy: destroy,
   authTokenExpired: authTokenExpired,
   generateAuthToken: generateAuthToken,
   findByAuthentication: findByAuthentication,

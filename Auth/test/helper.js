@@ -11,6 +11,7 @@ var Password = require('../lib/utils/password')
 var dbConfig = require('../config/database')
 var sqlite3 = require('sqlite3').verbose()
 var exec = require('child_process').exec
+var bodyParser = require('body-parser')
 var routes = require('../lib/routes')
 var express = require('express')
 var fs = require('fs')
@@ -25,17 +26,18 @@ global.rebuildDb = function(done) {
 
 global.setupApp = function() {
   var app = express()
+  app.use(bodyParser.json())
   routes(app)
   return app
 }
 
 global.seedUsers = function(attributes, done) {
-  var user = {$email: 'test@test.com', $first_name: 'first', $last_name: 'last', $password: 'ted123'}
+  var user = {$email: 'test@test.com', $first_name: 'first', $last_name: 'last', $password: 'ted123', $auth_token: 'xxxxxx', $auth_token_expires_at: (new Date().getTime() + 604000)}
   if(attributes) {
     attributes = prependKeys(attributes)
     user = _.defaults(attributes, user)
   }
-  var sql = "INSERT INTO users (email, first_name, last_name, encrypted_password) VALUES ($email, $first_name, $last_name, $encrypted_password)"
+  var sql = "INSERT INTO users (email, first_name, last_name, encrypted_password, auth_token, auth_token_expires_at) VALUES ($email, $first_name, $last_name, $encrypted_password, $auth_token, $auth_token_expires_at)"
   Password.encrypt(user.$password, function(err, encryptedPassword) {
     user.$encrypted_password = encryptedPassword
     delete user.$password

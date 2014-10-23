@@ -14,6 +14,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "bcrypt": "^0.8.0",
+    "body-parser": "^1.9.1",
     "db-migrate": "^0.7.1",
     "express": "^4.9.7",
     "lodash": "^2.4.1",
