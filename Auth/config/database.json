@@ -1,5 +1,5 @@
 {
-  "dev": {
+  "development": {
     "driver": "sqlite3",
     "filename": "tmp/upsurge-dev.db"
   },
