@@ -122,4 +122,16 @@ describe('Users Controller', function() {
       })
   })
 
+  it('DEL /api/v1/users/authenticate/:token - logs out the user', function(done) {
+    request(app)
+      .del('/api/v1/users/authenticate/xxxxxx')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+        assert(!err)
+        assert(res.body.logged_out)
+        done()
+      })
+  })
+
 })

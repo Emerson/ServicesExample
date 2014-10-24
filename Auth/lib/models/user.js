@@ -131,12 +131,21 @@ function authenticateWithToken(authToken, callback) {
   })
 }
 
+function logout(authToken, callback) {
+  var sql = "UPDATE users SET auth_token = NULL, auth_token_expires_at = NULL WHERE auth_token = $auth_token"
+  db.run(sql, {$auth_token: authToken}, function(err) {
+    if(err) { return callback(err) }
+    callback(null, true)
+  })
+}
+
 module.exports = {
   all: all,
   find: find,
   create: create,
   update: update,
   destroy: destroy,
+  logout: logout,
   authTokenExpired: authTokenExpired,
   generateAuthToken: generateAuthToken,
   findByAuthentication: findByAuthentication,

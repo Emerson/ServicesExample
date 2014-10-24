@@ -136,4 +136,15 @@ describe('User', function() {
     })
   })
 
+  it('clears the auth_token on logout', function(done) {
+    Model.logout('xxxxxx', function(err) {
+      assert(!err)
+      Model.find(1, function(err, user) {
+        assert(user.auth_token === null)
+        assert(user.auth_token_expires_at === null)
+        done()
+      })
+    })
+  })
+
 })
