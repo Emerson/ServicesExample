@@ -1,4 +1,5 @@
 var User = require('../models/user')
+var ApiError = require('../utils/api_error')
 
 module.exports = function(app) {
 
@@ -12,7 +13,11 @@ module.exports = function(app) {
   app.get('/api/v1/users/authenticate/:token', function(req, res) {
     User.authenticateWithToken(req.params.token, function(err, user) {
       if(err) {}
-      res.json({authenticated: true})
+      if(user) {
+        res.json({authenticated: true})
+      }else{
+        ApiError.unauthorized(res, {authenticated: false})
+      }
     })
   })
 

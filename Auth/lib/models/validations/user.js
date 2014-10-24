@@ -1,4 +1,17 @@
+var db = require('../../db')
 var validator = require('validator');
+
+var isUniqueEmail = function(email, callback) {
+  var sql = "SELECT COUNT(*) FROM users WHERE email = $email"
+  db.get(sql, {$email: email}, function(err, result) {
+    if(err) { return callback(err) }
+    if(result['COUNT(*)'] > 0) {
+      callback(true)
+    }else{
+      callback(null)
+    }
+  })
+}
 
 module.exports = function(user, callback) {
   user = _.defaults(user, {email: '', first_name: '', last_name: '', password: '', password_confirmation: ''})
@@ -34,10 +47,15 @@ module.exports = function(user, callback) {
     errors.password_confirmation = ['Your password and password confirmation must match']
   }
 
-  if(_.keys(errors).length === 0) {
-    callback(null)
-  }else{
-    callback(errors)
-  }
+  isUniqueEmail(user.email, function(err) {
+    if(err) {
+      errors.email = ['That email has already been registered']
+    }
+    if(_.keys(errors).length === 0) {
+      callback(null)
+    }else{
+      callback(errors)
+    }
+  })
 
 }

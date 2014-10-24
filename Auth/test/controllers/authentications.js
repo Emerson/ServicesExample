@@ -53,4 +53,18 @@ describe('Authentications Controller', function() {
       })
   })
 
+  //-- Invalid Requests ---------------------------------------------------
+  it('Invalid GET /api/v1/users/authenticate/:token - returns an error', function(done) {
+    request(app)
+      .get('/api/v1/users/authenticate/invalid-token')
+      .expect('Content-Type', /json/)
+      .expect(401)
+      .end(function(err, res) {
+        assert(!res.body.authenticate)
+        done()
+      })
+  })
+
+
+
 })

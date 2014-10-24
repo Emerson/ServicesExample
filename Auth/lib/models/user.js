@@ -98,11 +98,6 @@ function generateAuthToken(user, callback) {
   })
 }
 
-function authTokenExpired(authTokenExpiresAt, now) {
-  currentTime = now || new Date().getTime()
-  return (authTokenExpiresAt < currentTime)
-}
-
 function findByAuthentication(credentials, callback) {
   var findSql = "SELECT * FROM users WHERE email = $email"
   db.get(findSql, {$email: credentials.email}, function(err, user) {
@@ -120,13 +115,13 @@ function findByAuthentication(credentials, callback) {
 }
 
 function authenticateWithToken(authToken, callback) {
-  var sql = "SELECT * FROM users WHERE auth_token = $auth_token"
-  db.get(sql, {$auth_token: authToken}, function(err, user) {
+  var sql = "SELECT * FROM users WHERE auth_token = $auth_token AND auth_token_expires_at > $now"
+  db.get(sql, {$auth_token: authToken, $now: new Date().getTime()}, function(err, user) {
     if(err) { return callback(err) }
-    if(authTokenExpired(user.auth_token_expires_at)) {
-      return callback('Auth token expired')
-    }else{
+    if(user) {
       return callback(null, user)
+    }else{
+      return callback(err)
     }
   })
 }
@@ -146,7 +141,6 @@ module.exports = {
   update: update,
   destroy: destroy,
   logout: logout,
-  authTokenExpired: authTokenExpired,
   generateAuthToken: generateAuthToken,
   findByAuthentication: findByAuthentication,
   authenticateWithToken: authenticateWithToken

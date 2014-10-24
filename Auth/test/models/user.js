@@ -91,6 +91,15 @@ describe('User', function() {
     })
   })
 
+  it('validates the uniqueness of a user email', function(done) {
+    var attributes = {email: 'jake@test.com', first_name: 'error', last_name: 'error', password: 'ted123', password_confirmation: 'ted123'}
+    Model.create(attributes, function(err, user) {
+      assert(err.email)
+      assert(!user)
+      done()
+    })
+  })
+
   it('generates an auth token', function(done) {
     Model.find(1, function(err, user) {
       Model.generateAuthToken(user, function(err, user) {
@@ -117,21 +126,12 @@ describe('User', function() {
     })
   })
 
-  it('considers a token expired after one-week', function() {
-    // one week is 604800 seconds
-    var lastWeek = (new Date().getTime() - 604800)
-    var overOneWeek = (new Date().getTime() + 100)
-    assert(Model.authTokenExpired(lastWeek))
-    assert(!Model.authTokenExpired(overOneWeek))
-  })
-
-  it('does not authenticate expired auth tokens', function(done) {
-    Model.find(1, function(err, user) {
-      db.run("UPDATE users set auth_token = 'ted321', auth_token_expires_at = 100 WHERE id=1", function(err, result) {
-        Model.authenticateWithToken('ted321', function(err, user) {
-          assert(err)
-          done()
-        })
+  it('does not authenticate expires tokens', function(done) {
+    Model.update(1, {auth_token_expires_at: 100}, function(err, user) {
+      Model.authenticateWithToken('xxxxxx', function(err, user) {
+        assert(!err)
+        assert(!user)
+        done()
       })
     })
   })
