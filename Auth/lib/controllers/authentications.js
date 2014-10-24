@@ -5,7 +5,7 @@ module.exports = function(app) {
 
   app.post('/api/v1/users/authenticate', function(req, res) {
     User.findByAuthentication(req.body, function(err, user) {
-      if(err) {}
+      if(err) { return ApiError.unauthorized(res, err) }
       res.json({user: user})
     })
   })

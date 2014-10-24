@@ -65,6 +65,18 @@ describe('Authentications Controller', function() {
       })
   })
 
+  it('Invalid POST /api/v1/users/authenticate - returns an error', function(done) {
+    request(app)
+      .post('/api/v1/users/authenticate')
+      .send({})
+      .expect('Content-Type', /json/)
+      .expect(401)
+      .end(function(err, res) {
+        assert(!err)
+        assert(res.body.message)
+        done()
+      })
+  })
 
 
 })

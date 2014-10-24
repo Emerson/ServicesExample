@@ -3,6 +3,7 @@ var userIsValid = require('./validations/user')
 var Password = require('../utils/password')
 var uuid = require('node-uuid')
 var db = require('../db')
+var _ = require('lodash')
 
 
 //-- Internal Methods -----------------------------------------------------
@@ -99,16 +100,18 @@ function generateAuthToken(user, callback) {
 }
 
 function findByAuthentication(credentials, callback) {
+  credentials = _.defaults(credentials, {email: '', password: ''})
   var findSql = "SELECT * FROM users WHERE email = $email"
   db.get(findSql, {$email: credentials.email}, function(err, user) {
     if(err) { return callback(err) }
+    if(!user) { return callback({message: 'User not found'}) }
     // Check if the password matches
     Password.compare(credentials.password, user.encrypted_password, function(err, isPasswordMatch) {
       if(err) { return callback(err) }
       if(isPasswordMatch) {
         callback(null, user)
       }else{
-        callback('Password did not match')
+        callback({message: 'Password did not match'})
       }
     })
   })
