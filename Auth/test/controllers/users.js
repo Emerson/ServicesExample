@@ -94,42 +94,31 @@ describe('Users Controller', function() {
       })
   })
 
-  it('POST /api/v1/users/authenticate - authenticates a user', function(done) {
+
+  //-- Invalid Responses --------------------------------------------------
+  it('Invalid GET /api/v1/users/:id - returns a 404', function(done) {
     request(app)
-      .post('/api/v1/users/authenticate')
-      .send({email: 'test@test.com', password: 'ted123'})
+      .get('/api/v1/users/1000')
       .expect('Content-Type', /json/)
-      .expect(200)
+      .expect(404)
       .end(function(err, res) {
-        assert(!err)
-        assert(res.body.user.email)
-        assert(res.body.user.first_name)
-        assert(res.body.user.last_name)
-        assert(res.body.user.auth_token)
+        assert(res.body.status === 'Not Found')
         done()
       })
   })
 
-  it('GET /api/v1/users/authenticate/:token - authenticates with a token', function(done) {
+  it('Invalid POST /api/v1/users - returns validation errors', function(done) {
     request(app)
-      .get('/api/v1/users/authenticate/xxxxxx')
+      .post('/api/v1/users')
+      .send({})
+      .expect(422)
       .expect('Content-Type', /json/)
-      .expect(200)
       .end(function(err, res) {
-        assert(!err)
-        assert(res.body.authenticated)
-        done()
-      })
-  })
-
-  it('DEL /api/v1/users/authenticate/:token - logs out the user', function(done) {
-    request(app)
-      .del('/api/v1/users/authenticate/xxxxxx')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err, res) {
-        assert(!err)
-        assert(res.body.logged_out)
+        assert(res.body.email)
+        assert(res.body.first_name)
+        assert(res.body.last_name)
+        assert(res.body.password)
+        assert(res.body.password_confirmation)
         done()
       })
   })
