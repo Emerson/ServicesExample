@@ -1,5 +1,6 @@
+var _ = require('lodash')
 var db = require('../../db')
-var validator = require('validator');
+var validator = require('validator')
 
 var isUniqueEmail = function(email, callback) {
   var sql = "SELECT COUNT(*) FROM users WHERE email = $email"
@@ -14,6 +15,7 @@ var isUniqueEmail = function(email, callback) {
 }
 
 module.exports = function(user, callback) {
+  if(!user){user = {}}
   user = _.defaults(user, {email: '', first_name: '', last_name: '', password: '', password_confirmation: ''})
   var errors = {}
 

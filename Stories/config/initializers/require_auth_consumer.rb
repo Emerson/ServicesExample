@@ -1,0 +1,1 @@
+require_relative '../../lib/auth/auth_consumer'

@@ -15,8 +15,9 @@ if(program.port) {
   port = program.port
 }
 
-require('./lib/routes')(app)
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
+require('./lib/routes')(app)
 
 var server = app.listen(port, function() {
   var host = server.address().address

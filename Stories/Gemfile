@@ -2,10 +2,17 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.1.6'
 gem 'active_model_serializers'
+gem 'faraday_middleware'
+gem 'faraday'
 gem 'sqlite3'
 
 group :development do
   gem 'spring'
   gem 'better_errors'
   gem 'binding_of_caller'
+end
+
+group :test do
+  gem 'webmock'
+  gem 'vcr'
 end
