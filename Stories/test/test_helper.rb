@@ -15,6 +15,11 @@ class ActiveSupport::TestCase
     JSON.parse(response.body, symbolize_names: true)
   end
 
+  def login_user
+    # xxxxxx has been mocked as an authenticated token using VCR
+    request.headers['Authorization'] = "xxxxxx"
+  end
+
   # Example usage:
   #   assert_errors_on @record, :field_1, :field_2
   def assert_errors_on(record, *fields)

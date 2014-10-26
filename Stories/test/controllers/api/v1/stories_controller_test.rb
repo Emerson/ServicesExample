@@ -23,11 +23,14 @@ class Api::V1::StoriesControllerTest < ActionController::TestCase
   end
 
   def test_create
-    assert_difference "Story.count" do
-      post :create, story: {
-        title: 'New Story',
-        url:   'http://ted.com'
-      }
+    login_user
+    VCR.use_cassette('valid_token') do
+      assert_difference "Story.count" do
+        post :create, story: {
+          title: 'New Story',
+          url:   'http://ted.com'
+        }
+      end
     end
     assert_response :success
     assert_equal 'New Story', json_response[:story][:title]
@@ -36,20 +39,26 @@ class Api::V1::StoriesControllerTest < ActionController::TestCase
   end
 
   def test_update
+    login_user
     story = stories(:default)
-    put :update, id: story.id, story: {
-      title: 'Updated Title',
-      url:   'http://ted.com'
-    }
+    VCR.use_cassette('valid_token') do
+      put :update, id: story.id, story: {
+        title: 'Updated Title',
+        url:   'http://ted.com'
+      }
+    end
     assert_response :success
     assert_equal 'Updated Title', json_response[:story][:title]
     assert_equal 'http://ted.com', json_response[:story][:url]
   end
 
   def test_destroy
+    login_user
     story = stories(:default)
-    assert_difference "Story.count", -1 do
-      delete :destroy, id: story.id
+    VCR.use_cassette('valid_token') do
+      assert_difference "Story.count", -1 do
+        delete :destroy, id: story.id
+      end
     end
     assert_response :success
     assert json_response[:story][:id].present?
@@ -65,8 +74,11 @@ class Api::V1::StoriesControllerTest < ActionController::TestCase
   end
 
   def test_create_invalid
-    assert_no_difference "Story.count" do
-      post :create, story: {}
+    login_user
+    VCR.use_cassette('valid_token') do
+      assert_no_difference "Story.count" do
+        post :create, story: {}
+      end
     end
     assert_response :unprocessable_entity
     assert json_response[:message].present?
@@ -75,11 +87,14 @@ class Api::V1::StoriesControllerTest < ActionController::TestCase
   end
 
   def test_update_invalid
+    login_user
     story = stories(:default)
-    put :update, id: story.id, story: {
-      url:   '',
-      title: ''
-    }
+    VCR.use_cassette('valid_token') do
+      put :update, id: story.id, story: {
+        url:   '',
+        title: ''
+      }
+    end
     assert json_response[:message].present?
     assert json_response[:errors][:title].present?
     assert json_response[:errors][:url].present?

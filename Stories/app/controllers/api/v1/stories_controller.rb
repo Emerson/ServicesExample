@@ -1,6 +1,7 @@
-class Api::V1::StoriesController < ApplicationController
+class Api::V1::StoriesController < Api::BaseController
 
   before_action :load_story, only: [:show, :edit, :update, :destroy]
+  before_action :require_login, only: [:create, :update, :destroy]
 
   def index
     @stories = Story.all
