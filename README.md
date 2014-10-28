@@ -1,6 +1,6 @@
 # Service Example
 
-This repo is an example of service oriented architecture using different technologies. Based loosely on Reddit, the idea is to break up the major pieces of functionality into individual providers and consumers. Due to the nature of token based authentication, in the wild this service would need to be run over SSL to avoid man in the middle attacks. Everything here is **work in progress...**
+This repo is a personal exploration into the world of service oriented architecture. Based on the goal of eventually recreating Reddit, the idea is to break up the major pieces of functionality into individual providers and consumers using different technologies. Everything here is a **work in progress** and is not meant for production.
 
 ## Tests
 
@@ -25,3 +25,7 @@ A fairly standard **Rails** app that manages story submission and story manageme
 ---
 ### [Web-UI](https://github.com/Emerson/ServicesExample/tree/master/Web-UI)
 The first steps of an **Ember-CLI** app that will _(eventually)_ act as the front-end of the site.
+
+## Notes
+
+* Due to the nature of token based authentication, in the wild this ecosystem would need to be run over SSL to avoid man in the middle attacks.
