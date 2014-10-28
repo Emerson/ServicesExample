@@ -3,6 +3,7 @@
 var bodyParser = require('body-parser')
 var program = require('commander')
 var express = require('express')
+var cors = require('cors')
 var app = express()
 
 program
@@ -15,6 +16,7 @@ if(program.port) {
   port = program.port
 }
 
+app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 require('./lib/routes')(app)

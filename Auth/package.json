@@ -16,6 +16,7 @@
     "bcrypt": "^0.8.0",
     "body-parser": "^1.9.1",
     "commander": "^2.5.0",
+    "cors": "^2.5.0",
     "db-migrate": "^0.7.1",
     "express": "^4.9.7",
     "lodash": "^2.4.1",
