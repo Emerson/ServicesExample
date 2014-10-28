@@ -5,7 +5,7 @@ import ajax from 'ic-ajax';
 
 export default Ember.Object.extend({
 
- authToken: null,
+  authToken: null,
 
   invalidateSession: function() {
     var _this = this;

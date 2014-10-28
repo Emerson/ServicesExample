@@ -1,0 +1,21 @@
+<form {{action 'submit'}}>
+
+  <div class="input-group">
+    <label for="email">Email</label>
+    {{input type='text' value=email id='email' classNames='form-control' placeholder='Email Address'}}
+  </div>
+
+  <br>
+
+  <div class="input-group">
+    <label for="password">Password</label>
+    {{input type='password' value=password id='password' classNames='form-control' placeholder='Password'}}
+  </div>
+
+  <br>
+
+  <div class="input-group">
+    <input type="submit" value="Login" class="btn btn-primary">
+  </div>
+
+</form>

@@ -1,0 +1,10 @@
+{{#if session.loggedIn}}
+  <div class="page-header">
+    <h2>Your Account</h2>
+  </div>
+{{else}}
+  <div class="page-header">
+    <h2>Login</h2>
+  </div>
+  {{login-form action='submit'}}
+{{/if}}
