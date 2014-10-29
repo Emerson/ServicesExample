@@ -23,3 +23,25 @@ test('binds email and password', function() {
   equal(component.get('email'), 'test@test.com');
   equal(component.get('password'), 'ted123');
 });
+
+test('it triggers a submit action and passes an email and password', function() {
+  expect(3);
+  var component = this.subject();
+  var targetObject = {
+    mockAction: function(credentials) {
+      ok(credentials.email);
+      ok(credentials.password);
+      ok(true, 'mock action action was called');
+    }
+  };
+  component.set('login', 'mockAction');
+  component.set('targetObject', targetObject);
+  // Render the component
+  this.$();
+
+  Ember.run(function() {
+    $('input#email').val('test@test.com').trigger('change');
+    $('input#password').val('ted123').trigger('change');
+    $('input[type="submit"]').trigger('click');
+  });
+});
