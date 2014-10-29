@@ -4,11 +4,7 @@ export default Ember.Component.extend({
 
   email: '',
   password: '',
-
-  init: function() {
-    console.log(this.toString());
-    //=> Returns <web-ui@component:login-form::ember335>
-  },
+  errors: null,
 
   actions: {
 

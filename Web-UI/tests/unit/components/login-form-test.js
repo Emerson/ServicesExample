@@ -45,3 +45,14 @@ test('it triggers a submit action and passes an email and password', function() 
     $('input[type="submit"]').trigger('click');
   });
 });
+
+test('it displays an error message', function() {
+  expect(1);
+  var component = this.subject();
+  // Render the component
+  this.$();
+  Ember.run(function() {
+    component.set('errors', true);
+  });
+  equal($('.alert-warning').length, 1);
+});

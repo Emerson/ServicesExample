@@ -14,9 +14,11 @@
 
   <br>
 
-  <div class='alert alert-danger'>
-    this: {{this}}
-  </div>
+  {{#if errors}}
+    <div class='alert alert-warning'>
+      There was a problem with your email or password
+    </div>
+  {{/if}}
 
   <div class="input-group">
     <input type="submit" value="Login" class="btn btn-primary">
