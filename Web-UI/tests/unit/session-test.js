@@ -8,6 +8,15 @@ module('Session Service', {
   setup: function() {
     $.mockjax.clear();
     SessionManager = Session.create();
+    SessionManager.store = {
+      push: function(type, attributes) {
+        this.attributes = attributes;
+        var mockUser = Ember.Object.create(attributes);
+        mockUser.attributes = attributes;
+        mockUser.serialize = function() { return this.attributes; };
+        return mockUser;
+      }
+    };
   },
   teardown: function() {
     SessionManager.set('authToken', null);
@@ -58,7 +67,10 @@ test("it should logout a user", function() {
 });
 
 test("it should autologin users", function() {
-  var mockUser = Ember.Object.create({email: 'test@test.com', first_name: 'test', last_name: 'test', auth_token: 'xxxxxx'});
+  var mockAttributes = {email: 'test@test.com', first_name: 'test', last_name: 'test', auth_token: 'xxxxxx', authToken: 'xxxxxx'};
+  var mockUser = Ember.Object.create(mockAttributes);
+  mockUser.attributes = mockAttributes;
+  mockUser.serialize = function() { return this.attributes; };
   SessionManager.autologin(mockUser);
   ok(SessionManager.get('currentUser'));
   equal(SessionManager.get('currentUser.email'), 'test@test.com');

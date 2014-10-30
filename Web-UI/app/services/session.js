@@ -39,8 +39,12 @@ export default Ember.Object.extend({
         data: credentials
       });
       req.then(function(res) {
-        _this.set('authToken', res.user.auth_token);
-        _this.set('currentUser', Ember.Object.create(res.user));
+        var camelizedAttributes = {};
+        Ember.keys(res.user).forEach(function(key) {
+          camelizedAttributes[key.camelize()] = res.user[key];
+        });
+        var user = _this.store.push('user', camelizedAttributes);
+        _this.autologin(user);
         resolve(res);
       });
       req.catch(function(res) {
@@ -53,7 +57,7 @@ export default Ember.Object.extend({
 
   autologin: function(user) {
     this.set('loginError', null);
-    this.set('authToken', user.get('auth_token'));
+    this.set('authToken', user.get('authToken'));
     this.set('currentUser', user);
     return true;
   },
