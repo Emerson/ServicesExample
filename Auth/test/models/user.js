@@ -127,13 +127,14 @@ describe('User', function() {
   })
 
   it('does not authenticate expires tokens', function(done) {
-    Model.update(1, {auth_token_expires_at: 100}, function(err, user) {
+    var sql = "UPDATE users SET auth_token_expires_at = 100 WHERE id = 1"
+    db.run(sql, {}, function(err) {
       Model.authenticateWithToken('xxxxxx', function(err, user) {
         assert(!err)
         assert(!user)
         done()
-      })
-    })
+      });
+    });
   })
 
   it('clears the auth_token on logout', function(done) {

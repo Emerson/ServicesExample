@@ -47,6 +47,7 @@ function find(id, callback) {
 
 function create(attributes, callback) {
   var createSql = "INSERT INTO users (email, first_name, last_name, encrypted_password) VALUES ($email, $first_name, $last_name, $encrypted_password)"
+  attributes = _.pick(attributes, ['email', 'first_name', 'last_name', 'password', 'password_confirmation'])
   userIsValid(attributes, function(err) {
     if(err) { return callback(err) }
     addPassword(attributes, function(err) {
@@ -64,6 +65,7 @@ function create(attributes, callback) {
 function update(id, updatedAttributes, callback) {
   var sql = "UPDATE users SET "
   var updatePairs = []
+  updatedAttributes = _.pick(updatedAttributes, ['email', 'first_name', 'last_name', 'password', 'password_confirmation'])
   Object.keys(updatedAttributes).forEach(function(key, val) {
     updatePairs.push(key + " = $" + key)
   })
