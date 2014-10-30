@@ -90,6 +90,7 @@ describe('Users Controller', function() {
         assert(res.body.user.email === 'test@ted.com')
         assert(res.body.user.first_name === 'ted')
         assert(res.body.user.last_name === 'ted')
+        assert(res.body.user.auth_token)
         done()
       })
   })

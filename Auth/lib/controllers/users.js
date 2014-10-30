@@ -24,7 +24,10 @@ module.exports = function(app) {
   app.post('/api/v1/users', function(req, res) {
     User.create(req.body.user, function(err, user) {
       if(err) { return ApiError.unprocessableEntity(res, err) }
-      res.json({user: user})
+      User.generateAuthToken(user, function(err, user) {
+        if(err) { return ApiError.unprocessableEntity(res, err) }
+        res.json({user: user})
+      })
     })
   })
 
