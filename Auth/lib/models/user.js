@@ -69,7 +69,7 @@ function update(id, updatedAttributes, callback) {
   Object.keys(updatedAttributes).forEach(function(key, val) {
     updatePairs.push(key + " = $" + key)
   })
-  var sql = "UPDATE users SET " + updatePairs.join(', ') + " WHERE id = $id"
+  sql = "UPDATE users SET " + updatePairs.join(', ') + " WHERE id = $id"
   updatedAttributes.id = id
   db.run(sql, prependKeys(updatedAttributes), function(err) {
     if(err) { return callback(err) }
