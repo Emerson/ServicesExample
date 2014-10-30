@@ -8,7 +8,7 @@ module.exports = {
 
   unprocessableEntity: function(res, errors) {
     res.status(422)
-    res.json(errors)
+    res.json({errors: errors});
   },
 
   unauthorized: function(res, errors) {
