@@ -1,4 +1,5 @@
 /* global _ */
+/* global $ */
 
 import Ember from 'ember';
 import ajax from 'ic-ajax';
@@ -59,6 +60,15 @@ export default Ember.Object.extend({
     }else{
       return false;
     }
-  }.property('authToken')
+  }.property('authToken'),
+
+  addPrefilter: function() {
+    var _this = this;
+    if(this.get('loggedIn')) {
+      $.ajaxPrefilter(function(options, originalOptions, xhr) {
+        return xhr.setRequestHeader('Authorization', _this.get('authToken'));
+      });
+    }
+  }.observes('loggedIn').on('init')
 
 });
