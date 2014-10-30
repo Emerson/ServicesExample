@@ -49,7 +49,7 @@ describe('Users Controller', function() {
   it('PATCH /users/:id - updates a user', function(done) {
     request(app)
       .patch('/api/v1/users/1')
-      .send({first_name: 'PUT', email: 'PUT@test.com'})
+      .send({user: {first_name: 'PUT', email: 'PUT@test.com'}})
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {
@@ -79,7 +79,7 @@ describe('Users Controller', function() {
   })
 
   it('POST /api/v1/users - creates users', function(done) {
-    var attributes = {email: 'test@ted.com', first_name: 'ted', last_name: 'ted', password: 'ted123', password_confirmation: 'ted123'}
+    var attributes = {user: {email: 'test@ted.com', first_name: 'ted', last_name: 'ted', password: 'ted123', password_confirmation: 'ted123'}}
     request(app)
       .post('/api/v1/users')
       .send(attributes)

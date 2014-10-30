@@ -22,7 +22,7 @@ module.exports = function(app) {
 
   //-- Create -------------------------------------------------------------
   app.post('/api/v1/users', function(req, res) {
-    User.create(req.body, function(err, user) {
+    User.create(req.body.user, function(err, user) {
       if(err) { return ApiError.unprocessableEntity(res, err) }
       res.json({user: user})
     })
@@ -30,7 +30,7 @@ module.exports = function(app) {
 
   //-- Update -------------------------------------------------------------
   app.patch('/api/v1/users/:id', function(req, res) {
-    User.update(req.params.id, req.body, function(err, user) {
+    User.update(req.params.id, req.body.user, function(err, user) {
       if(err) {}
       res.json({user: user})
     })
