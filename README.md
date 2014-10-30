@@ -16,15 +16,15 @@ There is a simple Procfile that can be used with [Foreman](https://github.com/dd
 
 ---
 ### [Auth](https://github.com/Emerson/ServicesExample/tree/master/Auth)
-An example **Node** app that handles user management and provides token based authentication. Feel free to read the [user](https://github.com/Emerson/ServicesExample/blob/master/Auth/test/controllers/users.js) and [authentication](https://github.com/Emerson/ServicesExample/blob/master/Auth/test/controllers/authentications.js) controller tests for basic documentation. Because it's just an example/exercise, this service uses Sqlite and is not actual suitable for production deployments.
+An example **Node** app that handles user management and provides token based authentication. Feel free to read the [user](https://github.com/Emerson/ServicesExample/blob/master/Auth/test/controllers/users.js) and [authentication](https://github.com/Emerson/ServicesExample/blob/master/Auth/test/controllers/authentications.js) controller tests for basic documentation. Because it's just an example/exercise, this service uses Sqlite and is not actually suitable for production deployments. I've noticed a number of serious short comings with Sqlite, the worst being frequent database corruption.
 
 ---
 ### [Stories](https://github.com/Emerson/ServicesExample/tree/master/Stories)
-A fairly standard **Rails** app that manages story submission and story management. It ensures users are authenticated before letting them create, update, or destroy stories.
+A fairly standard **Rails** app that will manage story submission and story management. It ensures users are authenticated before letting them create, update, or destroy stories.
 
 ---
 ### [Web-UI](https://github.com/Emerson/ServicesExample/tree/master/Web-UI)
-The first steps of an **Ember-CLI** app that will _(eventually)_ act as the front-end of the site.
+The first steps of an **Ember-CLI** app that will _(eventually)_ act as the front-end of the site. It's pretty limited at the moment, but the foundations are well written so far _(in my opinion)_.
 
 ## Notes
 
