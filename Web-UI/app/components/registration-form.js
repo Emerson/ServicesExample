@@ -11,12 +11,11 @@ export default Ember.Component.extend({
     },
 
     submit: function() {
+      var _this = this;
       var user = this.get('user');
       var req = user.save();
-      req.then(function(res) {
-        this.get('session').autologin(res.user.auth_token);
-        debugger;
-        console.log(res, 'then');
+      req.then(function(user) {
+        _this.get('session').autologin(user.get('authToken'));
       }, function() {});
     }
 
