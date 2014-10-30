@@ -8,6 +8,7 @@ export default Ember.Object.extend({
 
   authToken: null,
   loginError: null,
+  currentUser:  null,
 
   invalidateSession: function() {
     var _this = this;
@@ -17,6 +18,7 @@ export default Ember.Object.extend({
         type: 'DELETE'
       });
       _this.set('authToken', null);
+      _this.set('currentUser', null);
       req.then(function(res) {
         resolve(res);
       });
@@ -38,6 +40,7 @@ export default Ember.Object.extend({
       });
       req.then(function(res) {
         _this.set('authToken', res.user.auth_token);
+        _this.set('currentUser', Ember.Object.create(res.user));
         resolve(res);
       });
       req.catch(function(res) {
@@ -48,9 +51,10 @@ export default Ember.Object.extend({
     });
   },
 
-  autologin: function(token) {
+  autologin: function(user) {
     this.set('loginError', null);
-    this.set('authToken', token);
+    this.set('authToken', user.get('auth_token'));
+    this.set('currentUser', user);
     return true;
   },
 

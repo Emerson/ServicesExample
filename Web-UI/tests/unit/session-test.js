@@ -1,6 +1,7 @@
 import {test} from 'ember-qunit';
 import Session from '../../services/session';
 import mockRequests from '../helpers/mockRequests';
+import Ember from 'ember';
 var SessionManager;
 
 module('Session Service', {
@@ -57,6 +58,10 @@ test("it should logout a user", function() {
 });
 
 test("it should autologin users", function() {
-  SessionManager.autologin('xxxxxx');
+  var mockUser = Ember.Object.create({email: 'test@test.com', first_name: 'test', last_name: 'test', auth_token: 'xxxxxx'});
+  SessionManager.autologin(mockUser);
+  ok(SessionManager.get('currentUser'));
+  equal(SessionManager.get('currentUser.email'), 'test@test.com');
   ok(SessionManager.get('loggedIn'));
+  equal(SessionManager.get('authToken'), 'xxxxxx');
 });

@@ -15,7 +15,7 @@ export default Ember.Component.extend({
       var user = this.get('user');
       var req = user.save();
       req.then(function(user) {
-        _this.get('session').autologin(user.get('authToken'));
+        _this.get('session').autologin(user);
       }, function() {});
     }
 

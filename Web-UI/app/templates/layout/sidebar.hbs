@@ -1,6 +1,12 @@
 {{#if session.loggedIn}}
+  {{log session.currentUser}}
   <div class="page-header">
     <h2>Your Account</h2>
+    <ul class="list-group">
+      <li class="list-group-item">Email: {{session.currentUser.email}}</li>
+      <li class="list-group-item">First Name: {{session.currentUser.first_name}}</li>
+      <li class="list-group-item">Last Name: {{session.currentUser.first_name}}</li>
+    </ul>
   </div>
 {{else}}
 
