@@ -1,0 +1,23 @@
+<div class="page-header">
+  <h2>Submit a Story</h2>
+</div>
+
+<form {{action 'submit' on='submit'}}>
+
+  <div {{bind-attr class=":form-group story.errors.email:has-error"}}>
+    <label for="title">Title</label>
+    {{input type='text' value=story.title id='title' classNames='form-control' placeholder='Story Title'}}
+    {{error-message error=story.errors.title}}
+  </div>
+
+  <div {{bind-attr class=":form-group story.errors.url:has-error"}}>
+    <label for="first_name">First Name</label>
+    {{input type='text' value=story.url id='first_name' classNames='form-control' placeholder='First Name'}}
+    {{error-message error=story.errors.url}}
+  </div>
+
+  <div class="form-group">
+    <input type="submit" value="Submit" class="btn btn-primary">
+  </div>
+
+</form>

@@ -10,7 +10,7 @@ module.exports = function(environment) {
       'default-src': "'none'",
       'script-src': "'self' 'unsafe-eval' localhost:35729 0.0.0.0:35729", // Allow scripts from https://cdn.mxpnl.com
       'font-src': "'self' http://fonts.gstatic.com", // Allow fonts to be loaded from http://fonts.gstatic.com
-      'connect-src': "'self' ws://localhost:35729 ws://0.0.0.0:35729 http://localhost:3030", // Allow data (ajax/websocket) from api.mixpanel.com and custom-api.local
+      'connect-src': "'self' ws://localhost:35729 ws://0.0.0.0:35729 http://localhost:3030 http://localhost:3000", // Allow data (ajax/websocket) from api.mixpanel.com and custom-api.local
       'img-src': "'self'",
       'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com", // Allow inline styles and loaded CSS from http://fonts.googleapis.com 
       'media-src': "'self'"

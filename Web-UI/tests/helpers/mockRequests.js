@@ -29,6 +29,15 @@ export default {
       status: 200,
       responseText: {logged_out: true}
     });
+  },
+
+  mockStories: function() {
+    $.mockjax({
+      url: Ember.ENV.storiesEndpoint + '/stories',
+      responseTime: 10,
+      status: 200,
+      responseText: {stories: [{id: 1, title: 'Text', url: 'http://ted.com'}]}
+    });
   }
 
 };

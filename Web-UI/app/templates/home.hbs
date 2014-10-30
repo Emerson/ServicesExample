@@ -1,3 +1,7 @@
 <div class="page-header">
   <h2>Stories</h2>
 </div>
+
+{{#each story in model.stories}}
+  <h3><a {{bind-attr href=story.url}}>{{story.title}}</a></h3>
+{{/each}}

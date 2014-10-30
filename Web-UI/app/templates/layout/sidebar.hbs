@@ -1,13 +1,15 @@
 {{#if session.loggedIn}}
+
   <div class="page-header">
-    <h2>Your Account</h2>
-    <ul class="list-group">
-      <li class="list-group-item">Email: {{session.currentUser.email}}</li>
-      <li class="list-group-item">First Name: {{session.currentUser.firstName}}</li>
-      <li class="list-group-item">Last Name: {{session.currentUser.lastName}}</li>
-    </ul>
-    <a href="#" {{action 'logout'}}>Logout</a>
+    <h2>Account</h2>
   </div>
+
+  <p>You are currently logged in as {{session.currentUser.email}} (<a href="#" {{action 'logout'}}>Logout</a>)</p>
+
+  <br>
+
+  {{story-submit-form story=model.story}}
+
 {{else}}
 
   {{render 'loginAndRegistration'}}
