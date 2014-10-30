@@ -41,6 +41,7 @@ export default Ember.Object.extend({
       req.then(function(res) {
         _this.set('authToken', res.user.auth_token);
         _this.set('currentUser', Ember.Object.create(res.user));
+        debugger;
         resolve(res);
       });
       req.catch(function(res) {
@@ -59,12 +60,14 @@ export default Ember.Object.extend({
   },
 
   loggedIn: function() {
+    console.log('testing');
+    this.get('authToken');
     if(this.get('authToken')) {
       return true;
     }else{
       return false;
     }
-  }.property('authToken'),
+  }.property('authToken', 'currentUser'),
 
   addPrefilter: function() {
     var _this = this;

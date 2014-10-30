@@ -7,10 +7,19 @@ export default Ember.Route.extend({
     return req;
   },
 
+  _logout: function() {
+    var req = this.get('session').invalidateSession();
+    return req;
+  },
+
   actions: {
 
     authenticate: function(credentials) {
       this._authenticate(credentials);
+    },
+
+    logout: function() {
+      this._logout();
     }
 
   }
