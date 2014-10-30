@@ -10,12 +10,14 @@ test('it exists', function() {
   ok(this.subject());
 });
 
-test('it sets the loginError property on a login failure', function() {
+test('it sets triggers the session.validateSession method', function() {
   expect(1);
-  mockRequests.authFailure();
   var route = this.subject();
-  route.set('session', SessionManager.create());
-  route._authenticate({}).catch(function() {
-    ok(route.get('loginError'));
-  });
+  var mockObject = {
+    called: false,
+    validateSession: function() { this.called = true; }
+  };
+  route.set('session', mockObject);
+  route._authenticate({});
+  ok(mockObject.called);
 });

@@ -1,0 +1,11 @@
+{{#if showLogin}}
+  <div class="page-header">
+    <h2>Login <small></h2>
+  </div>
+  {{login-form login='authenticate' error=session.loginError showRegistration='showRegistration'}}
+{{else}}
+  <div class="page-header">
+    <h2>Register</h2>
+  </div>
+  {{registration-form user=user showLogin='showLogin'}}
+{{/if}}

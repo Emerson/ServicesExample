@@ -4,9 +4,13 @@ export default Ember.Component.extend({
 
   email: '',
   password: '',
-  errors: null,
+  error: null,
 
   actions: {
+
+    showRegistration: function() {
+      this.sendAction('showRegistration');
+    },
 
     submit: function() {
       this.sendAction('login', {email: this.get('email'), password: this.get('password')});

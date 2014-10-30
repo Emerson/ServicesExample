@@ -8,7 +8,9 @@ module('Session Service', {
     $.mockjax.clear();
     SessionManager = Session.create();
   },
-  teardown: function() {}
+  teardown: function() {
+    SessionManager.set('authToken', null);
+  }
 });
 
 test("it exists", function() {
@@ -19,12 +21,13 @@ test("it should be logged out by default", function() {
   ok(!SessionManager.get('loggedIn'));
 });
 
-test("it should reject a user with an invalid email or password", function() {
+test("it should reject a user with an invalid email or password and set an error", function() {
   mockRequests.authFailure();
   return SessionManager.validateSession({})
     .catch(function(error) {
       equal(error.authenticated, false);
       equal(SessionManager.get('authToken'), null);
+      equal(SessionManager.get('loginError'), true);
       ok(!SessionManager.get('loggedIn'));
     });
 });
@@ -51,4 +54,9 @@ test("it should logout a user", function() {
       ok(res.logged_out);
       ok(!SessionManager.get('loggedIn'));
     });
+});
+
+test("it should autologin users", function() {
+  SessionManager.autologin('xxxxxx');
+  ok(SessionManager.get('loggedIn'));
 });

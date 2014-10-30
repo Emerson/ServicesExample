@@ -17,6 +17,7 @@ module.exports = function(environment) {
     },
     EmberENV: {
       authenticationUrl: 'http://localhost:3030/api/v1/users/authenticate',
+      usersEndpoint: 'http://localhost:3030/api/v1',
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true

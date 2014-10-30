@@ -6,6 +6,7 @@ import ajax from 'ic-ajax';
 export default Ember.Object.extend({
 
   authToken: null,
+  loginError: null,
 
   invalidateSession: function() {
     var _this = this;
@@ -26,6 +27,7 @@ export default Ember.Object.extend({
 
   validateSession: function(credentials) {
     var _this = this;
+    _this.set('loginError', null);
     credentials = _.defaults(credentials, {email: '', password: ''});
     return new Ember.RSVP.Promise(function(resolve, reject) {
       var req = ajax({
@@ -39,9 +41,16 @@ export default Ember.Object.extend({
       });
       req.catch(function(res) {
         _this.set('authToken', null);
+        _this.set('loginError', true);
         reject(res.jqXHR.responseJSON);
       });
     });
+  },
+
+  autologin: function(token) {
+    this.set('loginError', null);
+    this.set('authToken', token);
+    return true;
   },
 
   loggedIn: function() {

@@ -3,8 +3,7 @@
     <h2>Your Account</h2>
   </div>
 {{else}}
-  <div class="page-header">
-    <h2>Login</h2>
-  </div>
-  {{login-form login='authenticate' errors=loginErrors}}
+
+  {{render 'loginAndRegistration'}}
+
 {{/if}}
