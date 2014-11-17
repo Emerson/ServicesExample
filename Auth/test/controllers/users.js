@@ -13,7 +13,6 @@ describe('Users Controller', function() {
     seedUsers({}, done)
   })
 
-
   it('GET /api/v1/users - returns all users', function(done) {
     request(app)
       .get('/api/v1/users')
@@ -28,7 +27,7 @@ describe('Users Controller', function() {
         assert(res.body.users[0].auth_token)
         done()
       })
-  })
+  }) 
 
   it('GET /users/:id - returns a single user', function(done) {
     request(app)
@@ -54,7 +53,7 @@ describe('Users Controller', function() {
       .expect(200)
       .end(function(err, res) {
         assert(!err)
-        Model.find(1, function(err, user) {
+        Model.find(1).then(function(user) {
           assert(user.first_name === 'PUT')
           assert(user.email === 'PUT@test.com')
           done()
@@ -70,8 +69,7 @@ describe('Users Controller', function() {
       .end(function(err, res) {
         assert(!err)
         assert(!res.body.user)
-        Model.find(1, function(err, user) {
-          assert(!err)
+        Model.find(1).then(function(user) {
           assert(!user)
           done()
         })

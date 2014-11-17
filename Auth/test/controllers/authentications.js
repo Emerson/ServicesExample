@@ -36,7 +36,8 @@ describe('Authentications Controller', function() {
       .expect(200)
       .end(function(err, res) {
         assert(!err)
-        assert(res.body.authenticated)
+        assert(res.body.user)
+        assert(res.body.user.auth_token)
         done()
       })
   })
@@ -73,7 +74,7 @@ describe('Authentications Controller', function() {
       .expect(401)
       .end(function(err, res) {
         assert(!err)
-        assert(res.body.message)
+        assert(res.body.errors)
         done()
       })
   })

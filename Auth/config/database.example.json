@@ -1,17 +1,16 @@
 {
   "development": {
     "driver": "pg",
-    "username": "emerson",
+    "username": "postgres",
     "password": "",
     "host": "localhost",
     "database": "upsurge_auth_development"
   },
   "test": {
     "driver": "pg",
-    "username": "emerson",
+    "username": "postgres",
     "password": "",
     "host": "localhost",
-    "database": "upsurge_auth_test",
-    "logging": false
+    "database": "upsurge_auth_test"
   }
 }

@@ -13,7 +13,12 @@ module.exports = {
 
   unauthorized: function(res, errors) {
     res.status(401)
-    res.json(errors)
+    res.json({errors: errors})
+  },
+
+  internalError: function(res, errors) {
+    res.status(500)
+    res.json({errors: errors})
   }
 
 }

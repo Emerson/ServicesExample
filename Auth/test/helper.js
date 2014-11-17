@@ -10,18 +10,23 @@ var prependKeys = require('../lib/utils/prepend_keys')
 var Password = require('../lib/utils/password')
 var dbConfig = require('../config/database')
 var sqlite3 = require('sqlite3').verbose()
+var User = require('../lib/models/user')
 var exec = require('child_process').exec
 var bodyParser = require('body-parser')
 var routes = require('../lib/routes')
 var express = require('express')
 var fs = require('fs')
 
+
 //-- Globalized helpers ---------------------------------------------------
 global.rebuildDb = function(done) {
-  global.db.run('DELETE FROM users;', function(err) {
-    if(err) { return done(err) }
-    global.db.run('DELETE FROM SQLITE_SEQUENCE WHERE NAME = \'users\'', done)
-  })
+  global.db.query('TRUNCATE users RESTART IDENTITY')
+    .done(function(err) {
+      if(err) {
+        process.exit("There was a problem rebuilding the database")
+      }
+      done();
+    })
 }
 
 global.setupApp = function() {
@@ -32,15 +37,34 @@ global.setupApp = function() {
 }
 
 global.seedUsers = function(attributes, done) {
-  var user = {$email: 'test@test.com', $first_name: 'first', $last_name: 'last', $password: 'ted123', $auth_token: 'xxxxxx', $auth_token_expires_at: (new Date().getTime() + 604000)}
+  var user = {
+    email: 'test@test.com',
+    first_name: 'first',
+    last_name: 'last',
+    password: 'ted123',
+    password_confirmation: 'ted123',
+    auth_token: 'xxxxxx',
+    auth_token_expires_at: (new Date().getTime() + 604000)
+  }
   if(attributes) {
-    attributes = prependKeys(attributes)
     user = _.defaults(attributes, user)
   }
-  var sql = "INSERT INTO users (email, first_name, last_name, encrypted_password, auth_token, auth_token_expires_at) VALUES ($email, $first_name, $last_name, $encrypted_password, $auth_token, $auth_token_expires_at)"
-  Password.encrypt(user.$password, function(err, encryptedPassword) {
-    user.$encrypted_password = encryptedPassword
-    delete user.$password
-    db.run(sql, user, done)
+  User.create(user).then(function(savedUser) {
+    User.find(1).then(function(savedGuy) {
+      done()
+    })
+  }).catch(function(err) {
+    console.log("Error", err)
+    process.exit()
   })
+  // Password.encrypt(user.password, function(err, encryptedPassword) {
+  //   user.encrypted_password = encryptedPassword
+  //   delete user.password
+  //   User.create(user)
+  //     .done(function(user) {
+  //       done()
+  //     }, function() {
+  //       process.exit('There was a problem seeding the user', user)
+  //     })
+  // })
 }

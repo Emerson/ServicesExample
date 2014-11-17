@@ -9,7 +9,9 @@ exports.up = function(db, callback) {
     last_name: 'string',
     encrypted_password: 'string',
     auth_token: 'string',
-    auth_token_expires_at: {type: 'integer'}
+    auth_token_expires_at: {type: 'bigint'},
+    created_at: {type: 'datetime'},
+    updated_at: {type: 'datetime'}
   }, callback)
 }
 

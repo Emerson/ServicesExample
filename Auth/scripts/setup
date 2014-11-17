@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#  Stop the entire script if there's an error
+set -e
+
+PSQL="psql"
+if ! which $PSQL > /dev/null; then
+    PSQL="/Applications/Postgres.app/Contents/Versions/9.3/bin/psql -p5432"
+fi
+
+echo "Running npm install..."
+npm install
+
+echo "Checking config/database.json..."
+if [ ! -f "./config/database.json" ]; then
+    cp ./config/database.example.json ./config/database.json
+fi
+
+echo "Checking for databases..."
+if ! $PSQL --list | grep "upsurge_auth_development" > /dev/null; then
+    echo "Creating upsurge_auth_development database."
+    $PSQL --command "CREATE DATABASE upsurge_auth_development;" postgres
+fi
+
+if ! $PSQL --list | grep "upsurge_auth_test" > /dev/null; then
+    echo "Creating upsurge_auth_test database."
+    $PSQL --command "CREATE DATABASE upsurge_auth_test;" postgres
+fi
+
+echo "Running migrations..."
+#  Run migrations
+db-migrate up --config config/database.json
+db-migrate up --config ./config/database.json -e test
+
+echo ""
+echo -e $'\e[32m Done! \e[0m Auth should be ready to go.'
+echo "To start the app, run \`npm start\`."

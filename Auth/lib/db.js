@@ -1,5 +1,17 @@
-var sqlite3 = require('sqlite3').verbose();
-var dbConfig = require('../config/database.json')
+var Sequelize = require('sequelize')
 
-console.log('connecting to', process.env.NODE_ENV)
-module.exports = new sqlite3.Database(dbConfig[process.env.NODE_ENV].filename, 'OPEN_READWRITE')
+var dbConfig = require('../config/database.json')
+var username = dbConfig[process.env.NODE_ENV].username
+var password = dbConfig[process.env.NODE_ENV].password
+var database = dbConfig[process.env.NODE_ENV].database
+var host = dbConfig[process.env.NODE_ENV].host
+
+console.log('connecting to', database)
+module.exports = new Sequelize(database, username, password, {
+  host: host,
+  logging: false,
+  dialect: 'postgres',
+  define: {
+    underscored: true
+  }
+})

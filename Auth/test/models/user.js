@@ -1,40 +1,16 @@
 var Model = require('../../lib/models/user')
+  , formatErrors = require('../../lib/helpers/format-errors')
 
-describe('User', function() {
+describe('UserModel', function() {
 
   beforeEach(rebuildDb)
   beforeEach(function(done) {
     seedUsers({email: 'jake@test.com'}, done)
   })
 
-  it('returns a single user', function(done) {
-    Model.find(1, function(err, user) {
-      assert(!err)
-      assert(user.id === 1)
-      assert(user.hasOwnProperty('email'))
-      assert(user.hasOwnProperty('first_name'))
-      assert(user.hasOwnProperty('last_name'))
-      done()
-    })
-  })
-
-  it('selects all users', function(done) {
-    seedUsers(null, function() {
-      Model.all(function(err, results) {
-        assert(results.length === 2)
-        assert(results[0].email === 'jake@test.com')
-        assert(results[1].email === 'test@test.com')
-        done()
-      })
-    })
-  })
-
   it('creates a user', function(done) {
     var attributes = {email: 'create@create.com', first_name: 'Create', last_name: 'Test', password: 'ted123', password_confirmation: 'ted123'}
-    Model.create(attributes, function(err, user) {
-      assert(!err)
-      assert(user, 'User was not passed')
-      assert(!user.auth_token)
+    Model.create(attributes).then(function(user) {
       delete attributes.password
       delete attributes.password_confirmation
       _.each(attributes, function(val, key) {
@@ -45,19 +21,19 @@ describe('User', function() {
   })
 
   it('updates a user', function(done) {
-    var updatedAttributes = {email: 'update@test.com', first_name: 'Update'}
-    Model.update(1, updatedAttributes, function(err, user) {
-      assert(!err)
-      assert(user.email === 'update@test.com')
-      assert(user.first_name === 'Update')
-      done()
+    var attributes = {email: 'update@test.com', first_name: 'Update'}
+    Model.find(1).then(function(user) {
+      user.updateAttributes(attributes).then(function(updatedUser) {
+        assert(user.email === 'update@test.com')
+        assert(user.first_name === 'Update')
+        done()
+      })
     })
   })
 
   it('destroys users', function(done) {
-    Model.destroy(1, function(err) {
-      Model.find(1, function(err, user) {
-        assert(!err)
+    Model.destroy(1).then(function() {
+      Model.find(1).then(function(user) {
         assert(!user)
         done()
       })
@@ -65,19 +41,24 @@ describe('User', function() {
   })
 
   it('returns user validation errors', function(done) {
-    Model.create({}, function(err) {
-      assert(err)
-      assert(err.email)
-      assert(err.first_name)
-      assert(err.last_name)
-      assert(err.password)
-      assert(err.password_confirmation)
+    Model.create({first_name: '', last_name: ''}).catch(function(err) {
+      var formattedErrors = formatErrors(err.errors)
+      assert(formattedErrors.first_name.length == 1)
+      assert(formattedErrors.last_name.length == 1)
+      done()
+    })
+  })
+
+  it('encrypts a users password', function(done) {
+    var attributes = {password: 'pass', password_confirmation: 'pass', email: 'create@create.com', first_name: 'Create', last_name: 'Test'}
+    Model.create(attributes).then(function(user) {
+      assert(user.encrypted_password.length > 6)
       done()
     })
   })
 
   it('finds by email and password', function(done) {
-    Model.findByAuthentication({email: 'jake@test.com', password: 'ted123'}, function(err, user) {
+    Model.findByAuthentication({email: 'jake@test.com', password: 'ted123'}).then(function(user) {
       assert(user)
       assert(user.email === 'jake@test.com')
       done()
@@ -85,7 +66,7 @@ describe('User', function() {
   })
 
   it('returns an error when the password does not match', function(done) {
-    Model.findByAuthentication({email: 'jake@test.com', password: 'ted321'}, function(err, user) {
+    Model.findByAuthentication({email: 'jake@test.com', password: 'ted321'}).catch(function(err) {
       assert(err)
       done()
     })
@@ -93,19 +74,18 @@ describe('User', function() {
 
   it('validates the uniqueness of a user email', function(done) {
     var attributes = {email: 'jake@test.com', first_name: 'error', last_name: 'error', password: 'ted123', password_confirmation: 'ted123'}
-    Model.create(attributes, function(err, user) {
-      assert(err.email)
-      assert(!user)
+    Model.create(attributes).catch(function(errors) {
+      assert(errors.errors[0].message === 'Email address is already registered')
       done()
     })
   })
 
   it('generates an auth token', function(done) {
-    Model.find(1, function(err, user) {
-      Model.generateAuthToken(user, function(err, user) {
-        assert(!err)
-        assert(user)
-        assert(user.auth_token.length > 0)
+    Model.find(1).then(function(user) {
+      var previousToken = user.auth_token
+      user.generateAuthToken().then(function(user) {
+        assert(user.auth_token)
+        assert(user.auth_token !== previousToken)
         // Ensure there is a one week expiry
         assert(user.auth_token_expires_at > (new Date().getTime() + 604000))
         assert(user.auth_token_expires_at < (new Date().getTime() + 604801))
@@ -115,10 +95,8 @@ describe('User', function() {
   })
 
   it('authenticates with a token', function(done) {
-    Model.generateAuthToken({id: 1}, function(err, user) {
-      assert(!err)
-      Model.authenticateWithToken(user.auth_token, function(err, authUser) {
-        assert(!err)
+    Model.find(1).then(function(user) {
+      Model.authenticateWithToken(user.auth_token).then(function(authUser) {
         assert(authUser)
         assert(authUser.auth_token)
         done()
@@ -126,23 +104,28 @@ describe('User', function() {
     })
   })
 
+  it('returns an error when the token is invalid', function(done) {
+    Model.authenticateWithToken('wrong').catch(function(err) {
+      assert(err)
+      done()
+    })
+  })
+
   it('does not authenticate expires tokens', function(done) {
-    var sql = "UPDATE users SET auth_token_expires_at = 100 WHERE id = 1"
-    db.run(sql, {}, function(err) {
-      Model.authenticateWithToken('xxxxxx', function(err, user) {
-        assert(!err)
-        assert(!user)
-        done()
-      });
-    });
+    Model.find(1).then(function(user) {
+      user.updateAttributes({auth_token_expires_at: 100}).success(function() {
+        Model.authenticateWithToken('xxxxxx').catch(function(err) {
+          done()
+        })
+      })
+    })
   })
 
   it('clears the auth_token on logout', function(done) {
-    Model.logout('xxxxxx', function(err) {
-      assert(!err)
-      Model.find(1, function(err, user) {
-        assert(user.auth_token === null)
+    Model.logout('xxxxxx').then(function(msg) {
+      Model.find(1).then(function(user) {
         assert(user.auth_token_expires_at === null)
+        assert(user.auth_token === null)
         done()
       })
     })
